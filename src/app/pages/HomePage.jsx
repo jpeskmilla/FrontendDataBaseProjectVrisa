@@ -1,17 +1,52 @@
 // src/components/Desktop1/Desktop1.jsx
-import React from "react";
+import React, { useState } from "react";
 // reemplaza por rutas reales de tus assets exportados desde Figma
 import Logo from "../../assets/vrisa_logo.png";
 import homepage from "../../assets/homepage.jpg";
 import "./homepage-styles.css";
 import { LoginInput } from "../../shared/components/Input";
 import { useNavigate } from "react-router-dom";
+import { AuthAPI } from "../../shared/api";
 
 export default function Desktop1() {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleRegisterClick = () => {
     navigate("/register");
+  };
+
+  const handleChange = (field) => (e) => {
+    setFormData({ ...formData, [field]: e.target.value });
+    setError(""); // Limpiar error al escribir
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const response = await AuthAPI.login(formData.email, formData.password);
+      
+      // Guardar token en localStorage
+      if (response.token) {
+        localStorage.setItem("token", response.token);
+      }
+      
+      // Redirigir después del login exitoso
+      // TODO: Cambiar a la ruta del dashboard cuando esté disponible
+      navigate("/dashboard");
+    } catch (err) {
+      setError(err.message || "Error al iniciar sesión. Verifica tus credenciales.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -26,20 +61,42 @@ export default function Desktop1() {
           <p>Ingresa tu correo y contraseña para iniciar</p>
         </div>
 
-        <div className="form-container">
-          <LoginInput label="*  Correo" className="form-input" />
+        <form className="form-container" onSubmit={handleSubmit}>
+          <LoginInput
+            label="*  Correo"
+            className="form-input"
+            type="email"
+            placeholder="correo@ejemplo.com"
+            value={formData.email}
+            onChange={handleChange("email")}
+            required
+          />
           <LoginInput
             type="password"
             label="* Contraseña"
             className="form-input"
+            placeholder="Ingresa tu contraseña"
+            value={formData.password}
+            onChange={handleChange("password")}
+            required
           />
-        </div>
 
-        <p className="forget-text">¿Olvidaste tu contraseña?</p>
+          {error && (
+            <p style={{ color: "#e53935", fontSize: "0.9rem", marginTop: "8px" }}>
+              {error}
+            </p>
+          )}
 
-        <button type="button" className="login-button">
-          Iniciar sesión
-        </button>
+          <p className="forget-text">¿Olvidaste tu contraseña?</p>
+
+          <button
+            type="submit"
+            className="login-button"
+            disabled={isLoading}
+          >
+            {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
+          </button>
+        </form>
 
         <p className="register-text">
           ¿No tienes cuenta?{" "}
