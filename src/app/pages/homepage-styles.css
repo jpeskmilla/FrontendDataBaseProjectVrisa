@@ -1,144 +1,116 @@
-/* ====== GLOBAL ====== */
-
 body {
   font-family: "Inter", sans-serif;
-  background-color: #f3f4f6;
-  color: #111827;
   margin: 0;
   padding: 0;
 }
 
-a {
-  color: #111827;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-/* ====== LAYOUT PRINCIPAL ====== */
-
-.desktop1-container {
-  display: flex;
+.landing-wrapper {
   min-height: 100vh;
-}
-
-/* Imagen izquierda */
-.desktop1-left {
-  width: 50%;
-  background-size: cover;
-  background-position: center;
-}
-
-/* Formulario derecha */
-.desktop1-right {
-  width: 50%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  gap: 32px;
   padding: 40px;
-  background: #fafafa;
+  background-color: #f4f6fb;
 }
 
-/* Contenedor interior */
-.desktop1-card {
+.image-container,
+.homepage-container {
+  flex: 1;
+}
+
+.image-container {
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 20px 70px rgba(15, 23, 42, 0.15);
+  background-color: #e2e8f0;
+}
+
+.homepage-image {
   width: 100%;
-  max-width: 420px;
-}
-
-/* ====== TEXTO ====== */
-
-.desktop1-title {
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.desktop1-subtitle {
-  font-size: 16px;
-  font-weight: 400;
-  color: #6b7280;
-  margin-bottom: 32px;
-}
-
-/* ====== LABELS ====== */
-
-.desktop1-label {
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 6px;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
-.desktop1-label .required {
-  color: #ef4444;
-  margin-right: 4px;
-}
-
-/* ====== INPUTS ====== */
-
-.desktop1-input-wrapper {
+.homepage-container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 48px 40px 56px;
+  border-radius: 32px;
+  background-color: #ffffff;
+  box-shadow: 0 20px 70px rgba(15, 23, 42, 0.12);
   position: relative;
-  margin-bottom: 20px;
 }
 
-.desktop1-input {
+.homepage-welcome-container {
+  margin-top: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+}
+
+.homepage-welcome-container strong {
+  font-size: 2rem;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+  gap: 80px;
   width: 100%;
-  height: 48px;
-  padding: 12px 40px 12px 12px;
-  border-radius: 8px;
-  border: 2px solid #3949e9;
-  font-size: 14px;
-  outline: none;
 }
 
-.desktop1-input::placeholder {
-  color: #9ca3af;
+.forget-text {
+  text-align: right;
+  color: #4b5563;
+  font-size: 1rem;
 }
 
-.desktop1-input-icon {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-/* ====== BOTÓN ====== */
-
-.desktop1-button {
-  width: 100%;
-  background: #3949e9;
-  color: white;
-  padding: 14px 0;
-  text-align: center;
-  font-weight: 600;
-  border-radius: 8px;
+.login-button {
   border: none;
-  cursor: pointer;
-  margin-top: 6px;
-  font-size: 15px;
-}
-
-.desktop1-button:hover {
-  background: #2f3ec7;
-}
-
-/* ====== LINKS INFERIORES ====== */
-
-.desktop1-link {
-  text-align: center;
-  margin-top: 12px;
-  font-size: 14px;
-}
-
-.desktop1-link a {
+  border-radius: 28px;
+  background-color: var(--primario, #394bbd);
+  color: #fff;
+  font-size: 1.1rem;
   font-weight: 600;
+  padding: 18px 0;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 
-/* ====== LOGO SUPERIOR ====== */
+.login-button:hover {
+  opacity: 0.9;
+}
 
-.desktop1-logo {
-  width: 100px;
-  margin-bottom: 24px;
+.register-text {
+  text-align: center;
+  font-size: 1rem;
+  color: #1f2937;
+}
+
+.register-text span {
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.vrisa-logo {
+  width: 110px;
+  height: 110px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+@media (max-width: 1024px) {
+  .landing-wrapper {
+    flex-direction: column;
+  }
+
+  .vrisa-logo {
+    position: static;
+    align-self: flex-end;
+  }
 }
