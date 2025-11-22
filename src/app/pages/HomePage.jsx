@@ -7,6 +7,7 @@ import "./homepage-styles.css";
 import { LoginInput } from "../../shared/components/Input";
 import { useNavigate } from "react-router-dom";
 import { AuthAPI } from "../../shared/api";
+import { validateLoginInputs } from "../../shared/utils/validators";
 
 export default function Desktop1() {
   const navigate = useNavigate();
@@ -29,21 +30,36 @@ export default function Desktop1() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    // Validar y sanitizar inputs antes de enviar
+    const validation = validateLoginInputs(formData.email, formData.password);
+
+    if (!validation.isValid) {
+      setError(validation.errors.join(". "));
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      const response = await AuthAPI.login(formData.email, formData.password);
-      
+      // Usar los datos sanitizados para el login
+      const response = await AuthAPI.login(
+        validation.sanitized.email,
+        validation.sanitized.password
+      );
+
       // Guardar token en localStorage
       if (response.token) {
         localStorage.setItem("token", response.token);
       }
-      
+
       // Redirigir después del login exitoso
       // TODO: Cambiar a la ruta del dashboard cuando esté disponible
       navigate("/dashboard");
     } catch (err) {
-      setError(err.message || "Error al iniciar sesión. Verifica tus credenciales.");
+      setError(
+        err.message || "Error al iniciar sesión. Verifica tus credenciales."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -61,39 +77,44 @@ export default function Desktop1() {
           <p>Ingresa tu correo y contraseña para iniciar</p>
         </div>
 
-        <form className="form-container" onSubmit={handleSubmit}>
-          <LoginInput
-            label="*  Correo"
-            className="form-input"
-            type="email"
-            placeholder="correo@ejemplo.com"
-            value={formData.email}
-            onChange={handleChange("email")}
-            required
-          />
-          <LoginInput
-            type="password"
-            label="* Contraseña"
-            className="form-input"
-            placeholder="Ingresa tu contraseña"
-            value={formData.password}
-            onChange={handleChange("password")}
-            required
-          />
+        <form onSubmit={handleSubmit}>
+          <div className="form-container">
+            <LoginInput
+              label="*  Correo"
+              className="form-input"
+              type="email"
+              placeholder="correo@ejemplo.com"
+              value={formData.email}
+              onChange={handleChange("email")}
+              required
+            />
+            <LoginInput
+              type="password"
+              label="* Contraseña"
+              className="form-input"
+              placeholder="Ingresa tu contraseña"
+              value={formData.password}
+              onChange={handleChange("password")}
+              required
+            />
+          </div>
 
           {error && (
-            <p style={{ color: "#e53935", fontSize: "0.9rem", marginTop: "8px" }}>
+            <p
+              style={{
+                color: "#e53935",
+                fontSize: "0.9rem",
+                marginTop: "8px",
+                textAlign: "right",
+              }}
+            >
               {error}
             </p>
           )}
 
           <p className="forget-text">¿Olvidaste tu contraseña?</p>
 
-          <button
-            type="submit"
-            className="login-button"
-            disabled={isLoading}
-          >
+          <button type="submit" className="login-button" disabled={isLoading}>
             {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
           </button>
         </form>
